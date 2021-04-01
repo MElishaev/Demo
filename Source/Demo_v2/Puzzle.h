@@ -34,4 +34,10 @@ public:
 	TArray<AQuantumMesh *> GetMeshes() { return Meshes; }
 
 	TArray<ATeleportationSpot *> GetTpSpots() { return TpSpots; }
+
+	ATeleportationSpot *FindEmptySpot(FVector& BoxExtent);
+
+	void FreeMeshSpot(AQuantumMesh*);
+
+	bool CaptureMeshSpot(ATeleportationSpot *, AQuantumMesh *);
 };

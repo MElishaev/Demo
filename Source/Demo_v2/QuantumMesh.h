@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Teleporter.h"
 #include "QuantumMesh.generated.h"
 
 UCLASS()
@@ -28,7 +29,11 @@ public:
 
 	APuzzle *GetPuzzleParent() { return PuzzleParent; }
 
+	float GetTeleportationCooldown();
+
 	// TODO: maybe can delete, the BP API create their setters and getters
-	UFUNCTION(BlueprintCallable)
-	void SetPuzzleParent(APuzzle *Parent) { PuzzleParent = Parent; }
+	UFUNCTION(BlueprintCallable) void SetPuzzleParent(APuzzle *Parent)
+	{
+		PuzzleParent = Parent;
+	}
 };

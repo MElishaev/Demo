@@ -16,19 +16,20 @@ public:
 	// Sets default values for this actor's properties
 	ATeleportationSpot();
 
-	bool IsOccupied() { return bOccupied; }
-	void SetOccupied(bool State) { bOccupied = State; }
 	void SetOccupyingMesh(AQuantumMesh *Mesh) { Obj = Mesh; }
+	AQuantumMesh *GetOccupyingMesh() { return Obj; }
+	bool IsOccupied() { return bOccupied; }
+	void SetOccupation(bool state) { bOccupied = state; }
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool bOccupied;
+	AQuantumMesh *Obj;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	AQuantumMesh *Obj;
+	bool bOccupied = false;
 
 public:	
 	// Called every frame

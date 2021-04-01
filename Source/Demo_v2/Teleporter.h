@@ -35,4 +35,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void Teleport(AQuantumMesh *Owner);
+
+	float GetTeleportationCooldown() { return TeleportCooldown; }
 };

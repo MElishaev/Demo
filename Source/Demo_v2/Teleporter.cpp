@@ -45,8 +45,9 @@ void UTeleporter::Teleport(AQuantumMesh *Owner)
 
 	Owner->GetActorBounds(false, Origin, BoxExtent);
 
-	if (UUtilityFunctions::IsBoxOnScreen(GetWorld(), Origin, BoxExtent) && Owner->WasRecentlyRendered(TeleportCooldown))
+	if (Owner->WasRecentlyRendered(TeleportCooldown))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Was recently rendered"));
 		bSeenAlready = true;
 		bTeleported = false;
 		return;
@@ -57,29 +58,23 @@ void UTeleporter::Teleport(AQuantumMesh *Owner)
 	// 		for(int k=-1; k <= 1; k+=2)
 	// 		{
 	// 			FVector vertex = Origin + FVector(i*BoxExtent.X, j*BoxExtent.Y, k*BoxExtent.Z);
-
 	// 			FVector CameraLocation = PlayerController->PlayerCameraManager->GetCameraLocation();
 	// 			FVector CameraForwardVector = PlayerController->PlayerCameraManager->GetCameraRotation().Vector();
-
 	// 		}
 
 	// choose the destination of teleportation
-	APuzzle *Puzzle = Owner->GetPuzzleParent();
-	if (IsValid(Puzzle) && bSeenAlready && !bTeleported)
+	if (bSeenAlready && !bTeleported)
 	{
-		for (ATeleportationSpot *Spot : Puzzle->GetTpSpots())
+		APuzzle *Puzzle = Owner->GetPuzzleParent();
+		if (IsValid(Puzzle))
 		{
-			if (/*!Spot->IsOccupied() &&*/ !UUtilityFunctions::IsBoxOnScreen(GetWorld(), Spot->GetActorLocation(), BoxExtent))
+			ATeleportationSpot *Spot = Puzzle->FindEmptySpot(BoxExtent);
+
+			if (Spot != NULL && Puzzle->CaptureMeshSpot(Spot, Owner))
 			{
-				if(Owner->TeleportTo(Spot->GetActorLocation(), Owner->GetActorRotation(), false, true))
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Teleported %s"), *Owner->GetName());
-					bTeleported = true;
-					break;
-				}
-				//Owner->SetActorLocation(Spot->GetActorLocation());
-				//Spot->SetOccupied(true);
-				//Spot->SetOccupyingMesh(Owner);
+				UE_LOG(LogTemp, Warning, TEXT("Teleported %s to %s"), *Owner->GetName(), *Spot->GetActorLocation().ToString());
+				Owner->SetActorLocation(Spot->GetActorLocation());
+				bTeleported = true;
 			}
 		}
 	}
